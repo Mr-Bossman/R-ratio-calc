@@ -1,9 +1,7 @@
 #include <math.h>
-
 #include <functional>
 #include <iostream>
 #include <string>
-
 #include "Eseries.h"
 
 typedef struct Resistors {
@@ -14,11 +12,13 @@ typedef struct Resistors {
 	Resistors(double r) : R1(r), R2(r) {}
 } Resistors;
 
-void calc_R_ratio(unsigned int series, std::function<bool(Resistors, Resistors)> compare, Resistors &R) {
+void calc_R_ratio(unsigned int series, std::function<bool(Resistors, Resistors)> compare,
+                  Resistors& R) {
 	auto Eseries = E192_E24_Series(series);
 	for (auto i : Eseries)
 		for (auto j : Eseries)
-			if (compare(R, Resistors(i, j))) R = Resistors(i, j);
+			if (compare(R, Resistors(i, j)))
+				R = Resistors(i, j);
 }
 
 double normalise(double ratio) {
@@ -38,14 +38,12 @@ double denormalise(double ratio) {
 	return ret;
 }
 
-void parse_args(int argc, char **argv, unsigned int &series, double &ratio) {
+void parse_args(int argc, char** argv, unsigned int& series, double& ratio) {
 	if (argc < 2 || argc > 3) {
 		std::cout << "Usage: " << argv[0] << " <ratio> <series>" << std::endl;
 		std::cout << "Or: " << argv[0] << " <ratio>" << std::endl;
-		std::cout << "With <ratio> being A/B or a decimal fraction."
-				  << std::endl;
-		std::cout << "And with <series> being one of [3,6,12,24,48,96,192]."
-				  << std::endl;
+		std::cout << "With <ratio> being A/B or a decimal fraction." << std::endl;
+		std::cout << "And with <series> being one of [3,6,12,24,48,96,192]." << std::endl;
 		exit(1);
 	}
 	if (argc == 3) {
@@ -57,8 +55,7 @@ void parse_args(int argc, char **argv, unsigned int &series, double &ratio) {
 		pows /= 3;
 		double tmp = std::log2(pows);
 		if (tmp != (int)tmp || tmp > 6 || pows < 1) {
-			std::cout << "Series must be one of [3,6,12,24,48,96,192]."
-					  << std::endl;
+			std::cout << "Series must be one of [3,6,12,24,48,96,192]." << std::endl;
 			exit(1);
 		}
 		series = (int)tmp;
@@ -72,32 +69,32 @@ void parse_args(int argc, char **argv, unsigned int &series, double &ratio) {
 			double den = std::strtol(tmp.substr(pos + 1).c_str(), NULL, 10);
 			if (num <= 0 || den <= 0) {
 				std::cout << "Ratio must conatain 2 positive whole integers."
-						  << std::endl;
+					  << std::endl;
 				exit(1);
 			}
 			ratio = num / den;
 		} else {
-			std::cout << "Ratio must be A/B or a decimal fraction."
-					  << std::endl;
+			std::cout << "Ratio must be A/B or a decimal fraction." << std::endl;
 			exit(1);
 		}
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	Resistors R(1);
-	unsigned int series = 3;  // E24
+	unsigned int series = 3; // E24
 	double ratio = 1;
 	parse_args(argc, argv, series, ratio);
 	double NormRatio = normalise(ratio);
 	auto compare = [NormRatio](Resistors RO, Resistors RN) -> bool {
 		double O = (RO.R1 / RO.R2) - NormRatio;
 		double N = (RN.R1 / RN.R2) - NormRatio;
-		if (N < 0) return false;
+		if (N < 0)
+			return false;
 		return O > N;
 	};
 	calc_R_ratio(series, compare, R);
 	std::cout << R.R1 * denormalise(ratio) << "/" << R.R2 << "="
-			  << (R.R1 / R.R2) * denormalise(ratio) << std::endl;
+		  << (R.R1 / R.R2) * denormalise(ratio) << std::endl;
 	return 0;
 }

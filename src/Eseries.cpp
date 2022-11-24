@@ -1,9 +1,8 @@
+#include <math.h>
+#include <set>
 #include "Eseries.h"
 
-#include <math.h>
-
-#include <set>
-#define DE_FACTO_E24 \
+#define DE_FACTO_E24                                                                               \
 	{ 2.7, 3, 3.3, 3.6, 3.9, 4.3, 4.7, 8.2 }
 #define EPILON 0.0001
 
@@ -18,10 +17,10 @@ double E24Series(unsigned int n, unsigned int m) {
 	double CalcR = std::pow(10, (double)n / (double)m);
 	CalcR = std::round(CalcR * 10) / 10;
 	for (auto i : e24)
-	if (std::abs(CalcR - i) <= 0.1 + EPILON) {
-		CalcR = i;
-		break;
-	}
+		if (std::abs(CalcR - i) <= 0.1 + EPILON) {
+			CalcR = i;
+			break;
+		}
 	return CalcR;
 }
 
@@ -50,12 +49,14 @@ std::set<double> E192_E24_Series(unsigned int m) {
 	unsigned int Em = 3 * (1 << m);
 	/* Set is only E24 return it */
 	if (m <= 3) {
-	for (unsigned int i = 0; i < Em; i++)
-		E192_E24_set.insert(E24Series(i, m));
-	return E192_E24_set;
+		for (unsigned int i = 0; i < Em; i++)
+			E192_E24_set.insert(E24Series(i, m));
+		return E192_E24_set;
 	}
 	/* Set is combined E24 and E192 calculate it */
-	for (unsigned int i = 0; i < Em; i++) E192_E24_set.insert(E192Series(i, m));
-	for (unsigned int i = 0; i < 24; i++) E192_E24_set.insert(E24Series(i, 3));
+	for (unsigned int i = 0; i < Em; i++)
+		E192_E24_set.insert(E192Series(i, m));
+	for (unsigned int i = 0; i < 24; i++)
+		E192_E24_set.insert(E24Series(i, 3));
 	return E192_E24_set;
 }
