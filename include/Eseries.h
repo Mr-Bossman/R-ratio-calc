@@ -7,7 +7,7 @@
  * Set is calculated with Set=3*2^m.
  * n should be in the range [0,Set-1].
  */
-double E24Series(unsigned int n, unsigned int m) ;
+double E24Series(unsigned int n, unsigned int m);
 
 /*
  * To get the E192 sets m is the set indexed from 0 of [3,6,12,24,48,96,192].

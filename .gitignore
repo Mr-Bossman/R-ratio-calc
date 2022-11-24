@@ -1,0 +1,3 @@
+# built executable or compiled .o files
+main
+**/*.o  
